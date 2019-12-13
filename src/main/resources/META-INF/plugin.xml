@@ -1,0 +1,26 @@
+<idea-plugin>
+    <id>net.phoneportal.idea.plugin.fuelphp.idea-php-fuelphp-plugin</id>
+    <name>FuelPHP support</name>
+    <vendor email="rkojima0213@gmail.com" url="http://www.yourcompany.com">YourCompany</vendor>
+
+    <description><![CDATA[
+    FuelPHPフレームワークを利用した開発をサポートするプラグインです。<br>
+    <em>most HTML tags may be used</em>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <group id="FuelPHP.Menu" text="FuelPHP" description="FuelPHP support plugin">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action id="FuelPHP.Menu.Find.Usage" class="FindUsageIntelliSense" text="FindUsageIntelliSense" description="Find usage"/>
+        </group>
+    </actions>
+</idea-plugin>
