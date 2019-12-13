@@ -22,5 +22,13 @@
             <add-to-group group-id="MainMenu" anchor="last"/>
             <action id="FuelPHP.Menu.Find.Usage" class="FindUsageIntelliSense" text="FindUsageIntelliSense" description="Find usage"/>
         </group>
+
+        <action id="EditorBasics.EditorIllustrationAction"
+                class="EditorIllustrationAction"
+                text="Open File"
+                description="Open current selection file."
+                >
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
     </actions>
 </idea-plugin>
