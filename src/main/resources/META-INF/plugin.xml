@@ -1,10 +1,10 @@
 <idea-plugin>
     <id>net.phoneportal.idea.plugin.fuelphp.idea-php-fuelphp-plugin</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <name>FuelPHP support</name>
+    <vendor email="rkojima0213@gmail.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
+    FuelPHPフレームワークを利用した開発をサポートするプラグインです。<br>
     <em>most HTML tags may be used</em>
     ]]></description>
 
@@ -18,5 +18,10 @@
 
     <actions>
         <!-- Add your actions here -->
+        <group id="FuelPHP.Menu" text="FuelPHP" description="FuelPHP support plugin">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action id="FuelPHP.Menu.Find.ViewModel" class="FindUsageCurrentViewModel" text="FindUsageCurrentViewModel" description="Find usage"/>
+            <action id="FuelPHP.Menu.Find.Views" class="FindUsageCurrentViews" text="FindUsageCurrentViews" description="Find usage"/>
+        </group>
     </actions>
 </idea-plugin>
