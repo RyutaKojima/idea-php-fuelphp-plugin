@@ -20,8 +20,7 @@
         <!-- Add your actions here -->
         <group id="FuelPHP.Menu" text="FuelPHP" description="FuelPHP support plugin">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="FuelPHP.Menu.Find.ViewModel" class="FindUsageCurrentViewModel" text="FindUsageCurrentViewModel" description="Find usage"/>
-            <action id="FuelPHP.Menu.Find.Views" class="FindUsageCurrentViews" text="FindUsageCurrentViews" description="Find usage"/>
+            <action id="FuelPHP.Menu.Find.Usage" class="FindUsageIntelliSense" text="FindUsageIntelliSense" description="Find usage"/>
         </group>
     </actions>
 </idea-plugin>
