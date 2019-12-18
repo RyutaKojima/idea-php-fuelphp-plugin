@@ -1,11 +1,10 @@
 <idea-plugin>
     <id>net.phoneportal.idea.fuelphp</id>
     <name>FuelPHP support</name>
-    <vendor email="rkojima0213@gmail.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="rkojima0213@gmail.com" url="https://github.com/RyutaKojima/idea-php-fuelphp-plugin">Ryuta Kojima</vendor>
 
     <description><![CDATA[
-    FuelPHPフレームワークを利用した開発をサポートするプラグインです。<br>
-    <em>most HTML tags may be used</em>
+    This plug-in is to help development using the Fuel PHP framework.<br>
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
