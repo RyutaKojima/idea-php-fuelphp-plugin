@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>net.phoneportal.idea.plugin.fuelphp.idea-php-fuelphp-plugin</id>
+    <id>net.phoneportal.idea.fuelphp</id>
     <name>FuelPHP support</name>
     <vendor email="rkojima0213@gmail.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
@@ -10,10 +10,12 @@
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
+    <depends>com.jetbrains.php</depends>
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <gotoDeclarationHandler implementation="codeInsight.navigation.GotoHandler"/>
     </extensions>
 
     <actions>
