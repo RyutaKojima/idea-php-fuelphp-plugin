@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'net.phoneportal.idea.plugin.fuelphp'
-version '1.0-SNAPSHOT'
+version '0.0.3'
 
 sourceCompatibility = 1.8
 
@@ -26,6 +26,5 @@ intellij {
 }
 patchPluginXml {
     changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+      First release."""
 }
