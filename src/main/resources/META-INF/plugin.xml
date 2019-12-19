@@ -9,7 +9,11 @@
 
     <change-notes><![CDATA[
     <ul>
-        <li>First release</li>
+        <li>Find the currently open ViewModel file in the right-click menu.</li>
+        <li>Find the currently open View file in the right-click menu.</li>
+        <li>Provide references for ViewModel::forge.</li>
+        <li>Provide references for View::forge.</li>
+        <li>First release.</li>
     </ul>
     ]]></change-notes>
 
