@@ -3,10 +3,13 @@ import com.intellij.find.FindModel;
 import com.intellij.find.findInProject.FindInProjectManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FindUsageIntelliSense extends AnAction {
@@ -15,9 +18,29 @@ public class FindUsageIntelliSense extends AnAction {
     final String fuelControllerPath = "/fuel/app/classes/controller";
 
     public FindUsageIntelliSense() {
-        super("FindUsageCurrentViewModel");
+        super("Find this file is forged");
     }
 
+    @Override
+    public void update(@NotNull final AnActionEvent e) {
+        final Project project = e.getProject();
+        boolean isEnable = true;
+
+        VirtualFile activeFile = this.getActiveFile(e);
+        if (activeFile == null) {
+            isEnable = false;
+        } else {
+            String findingRegex = this.makeFindString(project, activeFile);
+            if (findingRegex == null) {
+                isEnable = false;
+            }
+        }
+
+        //Set visibility only in case of existing project and editor and if a selection exists
+        e.getPresentation().setEnabledAndVisible(isEnable);
+    }
+
+    @Override
     public void actionPerformed(AnActionEvent event) {
         Project project = event.getProject();
 
