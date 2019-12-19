@@ -7,6 +7,12 @@
     This plug-in is to help development using the Fuel PHP framework.<br>
     ]]></description>
 
+    <change-notes><![CDATA[
+    <ul>
+        <li>First release</li>
+    </ul>
+    ]]></change-notes>
+
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.jetbrains.php</depends>
