@@ -12,6 +12,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class FindUsageIntelliSense extends AnAction {
     final String fuelViewPath = "/fuel/app/views";
     final String fuelViewModelPath = "/fuel/app/classes/view";
@@ -82,11 +84,12 @@ public class FindUsageIntelliSense extends AnAction {
 
     private String getFuelFileType(VirtualFile activeFile)
     {
-        if (activeFile.getCanonicalPath().contains("fuel/app/views/")) {
+        String canonicalPath = Objects.requireNonNull(activeFile.getCanonicalPath());
+        if (canonicalPath.contains("fuel/app/views/")) {
             return "views";
         }
 
-        if (activeFile.getCanonicalPath().contains("fuel/app/classes/view/")) {
+        if (canonicalPath.contains("fuel/app/classes/view/")) {
             return "viewmodel";
         }
 
