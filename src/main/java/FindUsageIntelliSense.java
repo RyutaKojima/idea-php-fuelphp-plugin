@@ -43,6 +43,10 @@ public class FindUsageIntelliSense extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent event) {
         Project project = event.getProject();
+        if (project == null) {
+            Messages.showWarningDialog("Could not run.", "Error");
+            return;
+        }
 
         VirtualFile activeFile = this.getActiveFile(event);
         if (activeFile == null) {
@@ -60,6 +64,7 @@ public class FindUsageIntelliSense extends AnAction {
         FindModel findModel = findManager.getFindInProjectModel().clone();
         findModel.setStringToFind(findingRegex);
         findModel.setRegularExpressions(true);
+        findModel.setDirectoryName(null);
         FindInProjectManager.getInstance(project).startFindInProject(findModel);
     }
 
@@ -112,9 +117,9 @@ public class FindUsageIntelliSense extends AnAction {
 
         switch (fileType) {
             case "views":
-                return "\\View::forge\\(\\s*['\"]" + filePath + "['\"]";
+                return "View::forge\\(\\s*['\"]" + filePath + "['\"]";
             case "viewmodel":
-                return "\\ViewModel::forge\\(\\s*['\"]" + filePath + "\\s*['\"]";
+                return "ViewModel::forge\\(\\s*['\"]" + filePath + "\\s*['\"]";
             default:
                 return null;
         }
