@@ -23,7 +23,16 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+
+        <projectConfigurable instance="ui.FuelProjectSettingForm"
+                             id="Laravel.SettingsForm"
+                             displayName="FuelPHP"
+                             parentId="reference.webide.settings.project.settings.php"
+                             nonDefaultProject="true"
+        />
+
+        <projectService serviceImplementation="net.phoneportal.idea.fuelphp.FuelSettings"/>
+
         <gotoDeclarationHandler implementation="codeInsight.navigation.GotoHandler"/>
     </extensions>
 
