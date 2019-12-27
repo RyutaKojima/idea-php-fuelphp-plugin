@@ -1,4 +1,4 @@
-package ui;
+package net.phoneportal.idea.fuelphp.ui;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;

@@ -1,4 +1,4 @@
-package codeInsight.navigation;
+package net.phoneportal.idea.fuelphp.codeInsight.navigation;
 
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler;
 import com.intellij.openapi.actionSystem.DataContext;

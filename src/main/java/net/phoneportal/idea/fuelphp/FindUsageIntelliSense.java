@@ -1,3 +1,5 @@
+package net.phoneportal.idea.fuelphp;
+
 import com.intellij.find.FindManager;
 import com.intellij.find.FindModel;
 import com.intellij.find.findInProject.FindInProjectManager;
