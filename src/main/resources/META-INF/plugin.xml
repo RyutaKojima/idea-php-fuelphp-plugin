@@ -23,14 +23,23 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
-        <gotoDeclarationHandler implementation="codeInsight.navigation.GotoHandler"/>
+
+        <projectConfigurable instance="net.phoneportal.idea.fuelphp.ui.FuelProjectSettingForm"
+                             id="Laravel.SettingsForm"
+                             displayName="FuelPHP"
+                             parentId="reference.webide.settings.project.settings.php"
+                             nonDefaultProject="true"
+        />
+
+        <projectService serviceImplementation="net.phoneportal.idea.fuelphp.FuelSettings"/>
+
+        <gotoDeclarationHandler implementation="net.phoneportal.idea.fuelphp.codeInsight.navigation.GotoHandler"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
-        <action id="EditorBasics.FindUsageIntelliSense"
-                class="FindUsageIntelliSense"
+        <action id="EditorBasics.net.phoneportal.idea.fuelphp.FindUsageIntelliSense"
+                class="net.phoneportal.idea.fuelphp.FindUsageIntelliSense"
                 text="Find This File Is Forged"
                 description="Find this file is forged."
         >
