@@ -32,12 +32,37 @@ public class GotoHandler implements GotoDeclarationHandler {
 
         PsiElement variableContext = psiElement.getParent().getContext();
         if (!(variableContext instanceof ParameterList)) {
-            return null;
+            return PsiElement.EMPTY_ARRAY;
         }
 
         ParameterList parameterList = (ParameterList) variableContext;
         if (!(parameterList.getContext() instanceof MethodReference)) {
-            return null;
+            if (!(parameterList.getContext() instanceof FunctionReference)) {
+                return PsiElement.EMPTY_ARRAY;
+            }
+
+            FunctionReference functionReference = (FunctionReference) parameterList.getContext();
+            String methodName = functionReference.getName();
+            PsiElement[] parameters = functionReference.getParameters();
+
+            if (parent instanceof StringLiteralExpression) {
+                if (parent.equals(parameters[0])) {
+                    if (methodName.equals("__")) {
+                        String[] langParams = psiElement.getText().split("\\.");
+                        VirtualFile targetFile = projectBaseDir.findFileByRelativePath("fuel/app/lang")
+                                .findFileByRelativePath(lang)
+                                .findFileByRelativePath(langParams[0] + ".php");
+                        if (targetFile != null) {
+                            PsiElement psiTargetFile = PsiManager.getInstance(psiProject).findFile(targetFile);
+                            if (psiTargetFile != null) {
+                                psiTargets.add(psiTargetFile);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return psiTargets.toArray(new PsiElement[psiTargets.size()]);
         }
 
         MethodReference methodReference = (MethodReference) parameterList.getContext();
