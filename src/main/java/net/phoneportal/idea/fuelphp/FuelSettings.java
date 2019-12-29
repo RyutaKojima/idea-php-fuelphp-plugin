@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public class FuelSettings implements PersistentStateComponent<FuelSettings> {
 
     public String mainLanguage;
+    public String fuelEnv;
 
     public boolean dismissEnableNotification = false;
 
@@ -28,6 +29,9 @@ public class FuelSettings implements PersistentStateComponent<FuelSettings> {
 
     public String getMainLanguage() {
         return !StringUtils.isBlank(mainLanguage) ? mainLanguage : "en";
+    }
+    public String getFuelEnv() {
+        return !StringUtils.isBlank(fuelEnv) ? fuelEnv : "";
     }
 
     @Nullable

@@ -16,6 +16,7 @@ public class FuelProjectSettingForm implements Configurable {
 
     private JPanel mainPanel;
     private JTextField textMainLang;
+    private JTextField textFuelEnv;
 
     public FuelProjectSettingForm(@NotNull final Project project) {
         this.project = project;
@@ -41,12 +42,14 @@ public class FuelProjectSettingForm implements Configurable {
 
     @Override
     public boolean isModified() {
-        return !textMainLang.getText().equals(getSettings().getMainLanguage());
+        return !textMainLang.getText().equals(getSettings().getMainLanguage()) ||
+                !textFuelEnv.getText().equals(getSettings().getFuelEnv());
     }
 
     @Override
     public void apply() throws ConfigurationException {
         getSettings().mainLanguage = textMainLang.getText();
+        getSettings().fuelEnv = textFuelEnv.getText();
     }
 
     @Override
@@ -61,6 +64,7 @@ public class FuelProjectSettingForm implements Configurable {
 
     private void updateUIFromSettings() {
         textMainLang.setText(getSettings().getMainLanguage());
+        textFuelEnv.setText(getSettings().getFuelEnv());
     }
 
     private FuelSettings getSettings() {

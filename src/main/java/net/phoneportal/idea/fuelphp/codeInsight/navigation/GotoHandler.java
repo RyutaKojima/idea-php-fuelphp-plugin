@@ -8,7 +8,8 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
+import com.jetbrains.php.lang.psi.elements.*;
+import net.phoneportal.idea.fuelphp.FuelSettings;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -23,17 +24,34 @@ public class GotoHandler implements GotoDeclarationHandler {
         Collection<PsiElement> psiTargets = new ArrayList<>();
         PsiElement parent = psiElement.getParent();
         Project psiProject = psiElement.getProject();
-        VirtualFile projectFile = LocalFileSystem.getInstance().findFileByPath(psiProject.getBasePath());
+        VirtualFile projectBaseDir = LocalFileSystem.getInstance().findFileByPath(psiProject.getBasePath());
 
-        if(parent instanceof StringLiteralExpression) {
-            String viewModelLiteral = parent.getParent().getParent().getText();
+        FuelSettings settings = FuelSettings.getInstance(psiProject);
+        String fuelEnv = settings.getFuelEnv();
+        String lang = settings.getMainLanguage();
 
-            Pattern patternView = Pattern.compile("View::forge\\s*\\(\\s*['\"]([^'\"]+)['\"]");
-            Matcher matcher = patternView.matcher(viewModelLiteral);
-            if(matcher.find()) {
-                String matchText = matcher.group(1);
-                if (matchText.equals(psiElement.getText())) {
-                    VirtualFile targetFile = projectFile.findFileByRelativePath("fuel/app/views").findFileByRelativePath(psiElement.getText() + ".php");
+        PsiElement variableContext = psiElement.getParent().getContext();
+        if (!(variableContext instanceof ParameterList)) {
+            return null;
+        }
+
+        ParameterList parameterList = (ParameterList) variableContext;
+        if (!(parameterList.getContext() instanceof MethodReference)) {
+            return null;
+        }
+
+        MethodReference methodReference = (MethodReference) parameterList.getContext();
+        ClassReference classReference = (ClassReference) methodReference.getClassReference();
+        String namespace = classReference.getNamespaceName();
+        String className = classReference.getName();
+        String methodName = methodReference.getName();
+        PsiElement[] parameters = methodReference.getParameters();
+        String fullClassName = namespace + className;
+
+        if (parent instanceof StringLiteralExpression) {
+            if (parent.equals(parameters[0])) {
+                if (fullClassName.equals("\\View") && methodName.equals("forge")) {
+                    VirtualFile targetFile = projectBaseDir.findFileByRelativePath("fuel/app/views").findFileByRelativePath(psiElement.getText() + ".php");
                     if (targetFile != null) {
                         PsiElement psiTargetFile = PsiManager.getInstance(psiProject).findFile(targetFile);
                         if (psiTargetFile != null) {
@@ -41,14 +59,10 @@ public class GotoHandler implements GotoDeclarationHandler {
                         }
                     }
                 }
-            }
 
-            Pattern patternViewModel = Pattern.compile("ViewModel::forge\\s*\\(\\s*['\"]([^'\"]+)['\"]");
-            Matcher matcherViewModel = patternViewModel.matcher(viewModelLiteral);
-            if(matcherViewModel.find()) {
-                String matchText = matcherViewModel.group(1);
-                if (matchText.equals(psiElement.getText())) {
-                    VirtualFile targetFile = projectFile.findFileByRelativePath("fuel/app/classes/view").findFileByRelativePath(psiElement.getText() + ".php");
+                if (fullClassName.equals("\\ViewModel") && methodName.equals("forge")) {
+                    VirtualFile targetFile = projectBaseDir.findFileByRelativePath("fuel/app/classes/view")
+                            .findFileByRelativePath(psiElement.getText() + ".php");
                     if (targetFile != null) {
                         PsiElement psiTargetFile = PsiManager.getInstance(psiProject).findFile(targetFile);
                         if (psiTargetFile != null) {
@@ -56,8 +70,50 @@ public class GotoHandler implements GotoDeclarationHandler {
                         }
                     }
                 }
-            }
 
+                if (fullClassName.equals("\\Config")) {
+                    if (methodName.equals("get") || methodName.equals("load")) {
+                        String text = psiElement.getText();
+                        String[] configParams = text.split("\\.");
+                        String configFileName = configParams[0] + ".php";
+                        VirtualFile targetDirectory = projectBaseDir.findFileByRelativePath("fuel/app/config");
+                        VirtualFile targetFile = targetDirectory.findFileByRelativePath(configFileName);
+                        if (targetFile != null) {
+                            PsiElement psiTargetFile = PsiManager.getInstance(psiProject).findFile(targetFile);
+                            if (psiTargetFile != null) {
+                                psiTargets.add(psiTargetFile);
+                            }
+                        }
+
+                        if ( ! fuelEnv.isEmpty()) {
+                            targetFile = targetDirectory
+                                    .findFileByRelativePath(fuelEnv)
+                                    .findFileByRelativePath(configFileName);
+                            if (targetFile != null) {
+                                PsiElement psiTargetFile = PsiManager.getInstance(psiProject).findFile(targetFile);
+                                if (psiTargetFile != null) {
+                                    psiTargets.add(psiTargetFile);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (fullClassName.equals("\\Lang")) {
+                    if (methodName.equals("get") || methodName.equals("load")) {
+                        String[] langParams = psiElement.getText().split("\\.");
+                        VirtualFile targetFile = projectBaseDir.findFileByRelativePath("fuel/app/lang")
+                                .findFileByRelativePath(lang)
+                                .findFileByRelativePath(langParams[0] + ".php");
+                        if (targetFile != null) {
+                            PsiElement psiTargetFile = PsiManager.getInstance(psiProject).findFile(targetFile);
+                            if (psiTargetFile != null) {
+                                psiTargets.add(psiTargetFile);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         return psiTargets.toArray(new PsiElement[psiTargets.size()]);
