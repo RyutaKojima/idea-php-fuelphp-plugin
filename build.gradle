@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'net.phoneportal.idea.plugin.fuelphp'
-version '0.0.5'
+version '0.0.6'
 
 def htmlFixer = { htmlFile -> file(htmlFile).text.replace('<html>', '').replace('</html>', '') }
 
