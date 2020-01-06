@@ -25,7 +25,7 @@
     <extensions defaultExtensionNs="com.intellij">
 
         <projectConfigurable instance="net.phoneportal.idea.fuelphp.ui.FuelProjectSettingForm"
-                             id="Laravel.SettingsForm"
+                             id="net.phoneportal.FuelPHP.SettingsForm"
                              displayName="FuelPHP"
                              parentId="reference.webide.settings.project.settings.php"
                              nonDefaultProject="true"
