@@ -5,6 +5,8 @@ import com.jetbrains.php.lang.psi.elements.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayDeque;
+
 public class PsiElementUtils {
 
     @Nullable
@@ -68,5 +70,36 @@ public class PsiElementUtils {
         }
 
         return fullClassName.equals(namespace + className) && methodName.equals(methodReference.getName());
+    }
+
+    public static PhpPsiElement findArrayRecursive(ArrayCreationExpression arrayCreation, ArrayDeque<String> keyQue) {
+        ArrayDeque<String> searchQue = keyQue.clone();
+
+        String findKey = searchQue.poll();
+        if (findKey == null) {
+            return null;
+        }
+
+        for (ArrayHashElement hashElement : arrayCreation.getHashElements()) {
+            if (hashElement.getKey() instanceof StringLiteralExpression) {
+                StringLiteralExpression key = (StringLiteralExpression)hashElement.getKey();
+                String keyStr = key.getText().replaceFirst("^[\"']", "").replaceFirst("[\"']$", "");
+
+                if (keyStr.equals(findKey)) {
+                    if (hashElement.getValue() instanceof ArrayCreationExpression) {
+                        PhpPsiElement found = PsiElementUtils.findArrayRecursive((ArrayCreationExpression)hashElement.getValue(), searchQue);
+                         if (found == null) {
+                             return hashElement.getKey();
+                         } else {
+                             return found;
+                         }
+                    } else {
+                        return hashElement.getKey();
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }

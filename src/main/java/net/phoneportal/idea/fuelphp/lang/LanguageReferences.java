@@ -4,6 +4,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression;
+import com.jetbrains.php.lang.psi.elements.PhpPsiElement;
+import com.jetbrains.php.lang.psi.elements.PhpReturn;
+import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
 import net.phoneportal.idea.fuelphp.FuelSettings;
 import net.phoneportal.idea.fuelphp.util.FilesystemUtil;
 import net.phoneportal.idea.fuelphp.util.PsiElementUtils;
@@ -11,22 +16,59 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.ArrayDeque;
 
 public class LanguageReferences {
+
+    private boolean match(PsiElement psiElement) {
+        if (!(psiElement.getParent() instanceof StringLiteralExpression)) {
+            return false;
+        }
+
+        if (PsiElementUtils.isFunctionReference(psiElement, "__", 0)) {
+            return true;
+        }
+
+        if (PsiElementUtils.isMethodReference(psiElement, "\\Lang", "load", 0)) {
+            return true;
+        }
+
+        if (PsiElementUtils.isMethodReference(psiElement, "\\Lang", "get", 0)) {
+            return true;
+        }
+
+        return false;
+    }
 
     public Collection<PsiElement> getPsiTargets(PsiElement psiElement) {
         Collection<PsiElement> psiTargets = new ArrayList<>();
 
-        if (PsiElementUtils.isFunctionReference(psiElement, "__", 0) ||
-                PsiElementUtils.isMethodReference(psiElement, "\\Lang", "load", 0) ||
-                PsiElementUtils.isMethodReference(psiElement, "\\Lang", "get", 0)) {
+        if (!match(psiElement)) {
+            return psiTargets;
+        }
 
-            PsiElement psiTargetFile = getLangFile(psiElement);
-            if (psiTargetFile != null) {
-                psiTargets.add(psiTargetFile);
+        String text = psiElement.getText();
+        String[] configParams = text.split("\\.");
+        ArrayDeque<String> paramQue = new ArrayDeque<String>();
+        for (String s : configParams) {
+            paramQue.add(s);
+        }
+        String langFileName = paramQue.poll() + ".php";
+
+        PsiElement psiLangFile = getLangFile(psiElement);
+
+        if (psiLangFile != null) {
+            PhpReturn phpReturn = PsiTreeUtil.findChildOfType(psiLangFile, PhpReturn.class);
+            if (phpReturn.getFirstPsiChild() instanceof ArrayCreationExpression) {
+                PhpPsiElement found = PsiElementUtils.findArrayRecursive((ArrayCreationExpression)phpReturn.getFirstPsiChild(), paramQue);
+                if (found instanceof PhpPsiElement) {
+                    psiTargets.add(found);
+                    return psiTargets;
+                }
             }
         }
 
+        psiTargets.add(psiLangFile);
         return psiTargets;
     }
 
