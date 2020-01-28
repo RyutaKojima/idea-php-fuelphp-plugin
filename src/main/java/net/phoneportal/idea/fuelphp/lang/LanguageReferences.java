@@ -68,7 +68,10 @@ public class LanguageReferences {
             }
         }
 
-        psiTargets.add(psiLangFile);
+        if (psiLangFile != null) {
+            psiTargets.add(psiLangFile);
+        }
+
         return psiTargets;
     }
 
