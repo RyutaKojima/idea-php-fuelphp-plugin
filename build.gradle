@@ -1,10 +1,7 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.15'
+    id 'org.jetbrains.intellij' version '0.6.5'
 }
-
-group 'net.phoneportal.idea.plugin.fuelphp'
-version '0.0.8'
 
 def htmlFixer = { htmlFile -> file(htmlFile).text.replace('<html>', '').replace('</html>', '') }
 
@@ -20,13 +17,17 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version 'IU-2019.3'
+    version platformVersion
+    type platformType
     updateSinceUntilBuild false
     plugins = [
         "com.jetbrains.php:${phpPluginVersion}"
     ]
-    pluginName 'FuelPHP support'
+    pluginName pluginName_
 }
 patchPluginXml {
     changeNotes = htmlFixer('src/main/resources/META-INF/change-notes.html')
 }
+
+group 'net.phoneportal.idea.plugin.fuelphp'
+version pluginVersion
