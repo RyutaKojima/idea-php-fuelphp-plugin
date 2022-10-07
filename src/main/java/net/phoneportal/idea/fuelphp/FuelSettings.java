@@ -24,7 +24,7 @@ public class FuelSettings implements PersistentStateComponent<FuelSettings> {
     public boolean dismissEnableNotification = false;
 
     public static FuelSettings getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, FuelSettings.class);
+        return project.getService(FuelSettings.class);
     }
 
     public String getMainLanguage() {
